@@ -31,7 +31,11 @@ module.exports = async function run() {
         ? '\n\n' + pullRequest.body
         : '';
 
-    await validatePrTitle(pullRequest.title + prBody);
+    console.log(prBody);
+    await validatePrTitle(
+      pullRequest.title + prBody,
+      process.env.GITHUB_WORKSPACE
+    );
   } catch (error) {
     core.setFailed(error.message);
   }
