@@ -26,7 +26,12 @@ module.exports = async function run() {
       pull_number: contextPullRequest.number
     });
 
-    await validatePrTitle(pullRequest.title);
+    const prBody =
+      core.getInput('include_pr_body') === 'true'
+        ? '\n\n' + pullRequest.body
+        : '';
+
+    await validatePrTitle(pullRequest.title + prBody);
   } catch (error) {
     core.setFailed(error.message);
   }

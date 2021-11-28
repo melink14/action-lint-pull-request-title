@@ -27,3 +27,15 @@ it('throws for malformed PR titles', async () => {
     await expect(validatePrTitle(inputs[index])).rejects.toThrow();
   }
 });
+
+it('allows valid PR title + body combinations', async () => {
+  await validatePrTitle('feat(some-scope): some title\n\nsome body');
+});
+
+it('throws for valid PR title + malformed body combinations', async () => {
+  await expect(
+    validatePrTitle(
+`feat(some-scope): some title
+some body more than 100 characters xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`)
+  ).rejects.toThrow();
+});
