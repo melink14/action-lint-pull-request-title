@@ -7,13 +7,30 @@ on:
       - synchronize
 
 jobs:
-  main:
+  commitlint:
+    # This is probably spoofable so only use in lowrisk actions.
+    if: ${{ github.event.pull_request.user.login != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v4.1.1
+      - name: Use Node.js 16
+        uses: actions/setup-node@v4.0.2
         with:
-          node-version: 12
+          node-version: '16'
       - uses: ./
+        with:
+          include_pr_body: 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Skip commitlint for dependabot since PR body is not used for final commit
+  # An explicitly passing no-op job, like this these PRs to still pass branch protection
+  # for this check.
+  commitlint_skip:
+    name: commitlint
+    # This is probably spoofable so only use in lowrisk actions.
+    if: ${{ github.pull_request.user.login == 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Skipping commitlint"
