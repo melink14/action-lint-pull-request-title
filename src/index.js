@@ -1,12 +1,12 @@
-const core = require('@actions/core');
-const github = require('@actions/github');
-const validatePrTitle = require('./validatePrTitle');
+import { getInput, setFailed } from '@actions/core';
+import { GitHub, context } from '@actions/github';
+import validatePrTitle from './validatePrTitle';
 
-module.exports = async function run() {
+export default async function run() {
   try {
-    const client = new github.GitHub(process.env.GITHUB_TOKEN);
+    const client = new GitHub(process.env.GITHUB_TOKEN);
 
-    const contextPullRequest = github.context.payload.pull_request;
+    const contextPullRequest = context.payload.pull_request;
     if (!contextPullRequest) {
       throw new Error(
         "This action can only be invoked in `pull_request_target` or `pull_request` events. Otherwise the pull request can't be inferred."
@@ -27,7 +27,7 @@ module.exports = async function run() {
     });
 
     const prBody =
-      core.getInput('include_pr_body') === 'true'
+      getInput('include_pr_body') === 'true'
         ? '\n\n' + pullRequest.body
         : '';
 
@@ -37,6 +37,6 @@ module.exports = async function run() {
       process.env.GITHUB_WORKSPACE
     );
   } catch (error) {
-    core.setFailed(error.message);
+    setFailed(error.message);
   }
 };
