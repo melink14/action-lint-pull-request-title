@@ -1,4 +1,4 @@
-import validatePrTitle from './validatePrTitle';
+import validatePrTitle from './validatePrTitle.js';
 
 it('allows valid PR titles that use the default types', async () => {
   const inputs = [

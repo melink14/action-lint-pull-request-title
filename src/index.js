@@ -1,6 +1,6 @@
 import { getInput, setFailed } from '@actions/core';
 import { GitHub, context } from '@actions/github';
-import validatePrTitle from './validatePrTitle';
+import validatePrTitle from './validatePrTitle.js';
 
 export default async function run() {
   try {
